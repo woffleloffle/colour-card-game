@@ -7,18 +7,11 @@ var row1 = ["pink", "green", "yellow", "blue", "blue", "orange"];
 var rows = [row0, row1];
 
 rows.forEach((row, rowIndex) => {
-  var rowContent = '<div class="row' + rowIndex + '">';
+  var rowContent = `<div class="row-${rowIndex}">`;
 
   row.forEach((colour, colIndex) => {
     console.log({ rowIndex, colIndex, colour });
-    rowContent +=
-      '<p class="card colour-' +
-      colour +
-      '">' +
-      rowIndex +
-      "" +
-      colIndex +
-      "</p>";
+    rowContent += `<p class="card colour-${colour}">${rowIndex}${colIndex}</p>`;
   });
 
   rowContent += "</div>";
@@ -70,13 +63,24 @@ $(".card").click((event) => {
       //  - reset the colour variables! so that the _next click_ checks colour 1 again
       colour1 = "";
       colour2 = "";
+
+      // add a solved class, so we don't reset the solved colours
+      //  when guessing wrong
+      $(`.card.colour-${colour}`).addClass("solved");
     }
 
     // else, they are not the same.. so reset the board!
     else {
       console.log("colours are NOT the same!", { colour1, colour2 });
 
-      $(".card").css("background-color", "white");
+      colour1 = "";
+      colour2 = "";
+
+      // wait for 1 second, and then remove the background colours for the
+      //  unsolved cards!
+      setTimeout(() => {
+        $(".card:not(.solved)").css("background-color", "white");
+      }, 1000);
     }
   }
 });
